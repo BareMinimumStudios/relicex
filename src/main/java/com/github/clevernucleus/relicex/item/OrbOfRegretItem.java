@@ -53,6 +53,7 @@ public class OrbOfRegretItem extends Item {
 				IPlayerDataComponent component = user.getComponent(PlayerEXComponents.PLAYER_DATA);
 
 				AtomicInteger refundPoints = new AtomicInteger();
+
 				PlayerEXAPI.getRefundConditions().forEach((condition) -> refundPoints.getAndAdd(condition.invoke(component, user).intValue()));
 				if (value < 0.0 || refundPoints.get() < 0) return super.use(world, user, hand);
 

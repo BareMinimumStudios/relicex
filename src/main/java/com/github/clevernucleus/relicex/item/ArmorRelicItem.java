@@ -1,19 +1,31 @@
 package com.github.clevernucleus.relicex.item;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.bibireden.data_attributes.api.item.ItemHelper;
 import com.github.clevernucleus.relicex.RelicEx;
 import com.github.clevernucleus.relicex.impl.EntityAttributeCollection;
 import com.github.clevernucleus.relicex.impl.Rareness;
 import com.github.clevernucleus.relicex.impl.RelicType;
+import com.github.clevernucleus.relicex.models.armor.RelicArmorModel;
+import com.github.clevernucleus.relicex.renderers.RelicArmorRenderer;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.animatable.client.RenderProvider;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.renderer.dynamic.DynamicGeoItemRenderer;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -23,8 +35,12 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
-public class ArmorRelicItem extends ArmorItem implements ItemHelper {
+public class ArmorRelicItem extends ArmorItem implements ItemHelper, GeoItem {
+	private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+	private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+
 	public ArmorRelicItem(RelicType type) {
 		super(ArmorMaterials.CHAIN, type.getType(), (new FabricItemSettings()).maxCount(1));
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> content.add(this));
@@ -85,5 +101,38 @@ public class ArmorRelicItem extends ArmorItem implements ItemHelper {
 		}
 		
 		return Rareness.COMMON.equipSound();
+	}
+
+	@Override
+	public void createRenderer(Consumer<Object> consumer) {
+		consumer.accept(new RenderProvider() {
+			private RelicArmorRenderer renderer;
+
+			@Override
+			public @NotNull BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
+				var tag = itemStack.getNbt();
+				if (tag != null) {
+					renderer = new RelicArmorRenderer(new RelicArmorModel(Rareness.fromKey(tag.getString(EntityAttributeCollection.KEY_RARENESS))));
+				}
+				else {
+					renderer = new RelicArmorRenderer(new RelicArmorModel(Rareness.COMMON));
+				}
+				renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+				return this.renderer;
+			}
+		});
+	}
+
+	@Override
+	public Supplier<Object> getRenderProvider() {
+		return renderProvider;
+	}
+
+	@Override
+	public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}
+
+	@Override
+	public AnimatableInstanceCache getAnimatableInstanceCache() {
+		return cache;
 	}
 }

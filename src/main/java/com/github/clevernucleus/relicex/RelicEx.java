@@ -103,7 +103,6 @@ public class RelicEx implements ModInitializer {
 	}
 	
 	public static RelicExConfig config() {
-
 		return AutoConfig.getConfigHolder(RelicExConfig.class).get();
 	}
 }
