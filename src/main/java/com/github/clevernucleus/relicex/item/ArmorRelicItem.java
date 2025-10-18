@@ -18,7 +18,6 @@ import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.renderer.dynamic.DynamicGeoItemRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -43,7 +42,32 @@ public class ArmorRelicItem extends ArmorItem implements ItemHelper, GeoItem {
 
 	public ArmorRelicItem(RelicType type) {
 		super(ArmorMaterials.CHAIN, type.getType(), (new FabricItemSettings()).maxCount(1));
-		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> content.add(this));
+		// Registration moved to RelicEx.onInitialize()
+	}
+	
+	/**
+	 * Registers all rareness variants of this armor item to the COMBAT item group
+	 */
+	public static void registerAllVariants(Item armorItem, RelicType armorType) {
+		// Only register actual armor pieces (not trinkets)
+		if (armorType.getType() == null) return;
+		
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
+			for (Rareness rareness : Rareness.values()) {
+				// Use the existing registered item instead of creating a new one
+				ItemStack stack = new ItemStack(armorItem);
+				
+				// Set the rareness in NBT
+				NbtCompound tag = stack.getOrCreateNbt();
+				tag.putString(EntityAttributeCollection.KEY_RARENESS, rareness.key());
+				
+				// Initialize the attributes for this rareness
+				EntityAttributeCollection collection = new EntityAttributeCollection();
+				collection.writeToNbt(tag);
+				
+				content.add(stack);
+			}
+		});
 	}
 	
 	@Override

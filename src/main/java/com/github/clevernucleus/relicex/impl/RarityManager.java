@@ -9,7 +9,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import com.github.clevernucleus.relicex.RelicEx;
-import com.github.clevernucleus.relicex.RelicExRecipes;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,12 +17,11 @@ import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 public final class RarityManager implements SimpleResourceReloadListener<RarityManager.Weights> {
-	public record Weights(Map<Identifier, RelicExRecipes.Weights> packedWeights) {}
+	public record Weights(Map<Identifier, String> packedWeights) {}
 
 	private static final Gson GSON = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
 	private static final int PATH_SUFFIX_LENGTH = ".json".length();
@@ -31,12 +29,12 @@ public final class RarityManager implements SimpleResourceReloadListener<RarityM
 	private static final String DIRECTORY = "weights";
 	private static final Identifier ID = new Identifier(RelicEx.MODID, DIRECTORY);
 
-	private final Map<Identifier, RelicExRecipes.Weights> cachedWeightMap;
+	private final Map<Identifier, WeightProperty> cachedWeightMap;
 
 	@Override
 	public CompletableFuture<Weights> load(ResourceManager manager, Profiler profiler, Executor executor) {
 		return CompletableFuture.supplyAsync(() -> {
-			Map<Identifier, RelicExRecipes.Weights> cache = new HashMap<>();
+			Map<Identifier, String> cache = new HashMap<>();
 			int length = DIRECTORY.length() + 1;
 
 			manager.findResources(DIRECTORY, id -> id.getPath().endsWith(".json")).forEach((resource, value) -> {
@@ -45,7 +43,7 @@ public final class RarityManager implements SimpleResourceReloadListener<RarityM
 
 				try {
 					BufferedReader reader = value.getReader();
-					GSON.<Map<String, RelicExRecipes.Weights>>fromJson(reader, new TypeToken<Map<String, RelicExRecipes.Weights>>() {}.getType())
+					GSON.<Map<String, String>>fromJson(reader, new TypeToken<Map<String, String>>() {}.getType())
 						.forEach((k, v) -> {
 							Identifier id = Identifier.tryParse(k);
 							if (id == null || v == null) {
@@ -65,7 +63,17 @@ public final class RarityManager implements SimpleResourceReloadListener<RarityM
 
 	@Override
 	public CompletableFuture<Void> apply(Weights data, ResourceManager manager, Profiler profiler, Executor executor) {
-		return CompletableFuture.runAsync(() -> data.packedWeights.forEach(this.cachedWeightMap::putIfAbsent), executor);
+		return CompletableFuture.runAsync(() -> {
+			data.packedWeights.forEach((id, packedWeight) -> {
+				if (packedWeight.isEmpty()) return;
+
+				String[] strings = packedWeight.split(":");
+
+				if(strings.length != 8) return;
+				WeightProperty property = new WeightProperty(strings);
+				this.cachedWeightMap.putIfAbsent(id, property);
+			});
+		}, executor);
 	}
 
 	@Override
@@ -81,7 +89,7 @@ public final class RarityManager implements SimpleResourceReloadListener<RarityM
 		return this.cachedWeightMap.keySet();	
 	}
 	
-	public @NotNull WeightProperty weight(final Identifier identifier) {
-		return new WeightProperty(this.cachedWeightMap.getOrDefault(identifier, null));
+	public @Nullable WeightProperty weight(final Identifier identifier) {
+		return this.cachedWeightMap.getOrDefault(identifier, null);
 	}
 }

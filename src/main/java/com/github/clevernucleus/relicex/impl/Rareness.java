@@ -7,8 +7,6 @@ import com.bibireden.data_attributes.api.util.Maths;
 import com.github.clevernucleus.relicex.RelicEx;
 import com.github.clevernucleus.relicex.RelicExClient;
 
-import com.github.clevernucleus.relicex.item.ArmorRelicItem;
-import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;

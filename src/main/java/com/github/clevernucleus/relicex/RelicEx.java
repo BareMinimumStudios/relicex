@@ -3,7 +3,6 @@ package com.github.clevernucleus.relicex;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bibireden.data_attributes.api.event.AttributesReloadedEvent;
 import com.github.clevernucleus.relicex.config.RelicExConfig;
 import com.github.clevernucleus.relicex.impl.RarityManager;
 import com.github.clevernucleus.relicex.impl.RelicType;
@@ -99,6 +98,11 @@ public class RelicEx implements ModInitializer {
 		AutoConfig.register(RelicExConfig.class, GsonConfigSerializer::new);
 		Registry.register(Registries.SOUND_EVENT, LEVEL_REFUND_SOUND.getId(), LEVEL_REFUND_SOUND);
 		Registry.register(Registries.SOUND_EVENT, POTION_USE_SOUND.getId(), POTION_USE_SOUND);
+		
+		// Register all rareness variants for armor pieces in item groups
+		ArmorRelicItem.registerAllVariants(HEAD_RELIC, RelicType.HEAD);
+		ArmorRelicItem.registerAllVariants(CHEST_RELIC, RelicType.BODY);
+		
 		LootTableEvents.MODIFY.register(RelicEx::addLoot);
 	}
 	

@@ -2,7 +2,6 @@ package com.github.clevernucleus.relicex.impl;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import net.minecraft.item.ArmorItem;
 import net.minecraft.text.Text;

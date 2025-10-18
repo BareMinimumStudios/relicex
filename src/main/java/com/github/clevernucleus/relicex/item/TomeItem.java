@@ -3,14 +3,11 @@ package com.github.clevernucleus.relicex.item;
 import java.util.List;
 
 import com.bibireden.data_attributes.api.DataAttributesAPI;
-import com.bibireden.data_attributes.api.attribute.IEntityAttribute;
 import com.bibireden.playerex.PlayerEX;
 import com.bibireden.playerex.api.attribute.PlayerEXAttributes;
 import com.bibireden.playerex.api.event.PlayerEXSoundEvents;
 import com.bibireden.playerex.components.PlayerEXComponents;
 import com.bibireden.playerex.components.player.IPlayerDataComponent;
-import com.bibireden.playerex.factory.ServerNetworkingFactory;
-import com.bibireden.playerex.networking.types.NotificationType;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;

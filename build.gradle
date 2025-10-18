@@ -1,7 +1,7 @@
 plugins {
-	id 'fabric-loom' version "1.7-SNAPSHOT"
+	id 'fabric-loom' version "1.9-SNAPSHOT"
 	id 'maven-publish'
-	id "org.jetbrains.kotlin.jvm" version "2.0.0"
+	id "org.jetbrains.kotlin.jvm" version "2.1.0"
 }
 
 loom {
@@ -50,6 +50,7 @@ repositories {
 			includeGroup "curse.maven"
 		}
 	}
+	maven { url = 'https://maven.azuredoom.com/mods' }
 }
 
 dependencies {
@@ -75,7 +76,6 @@ dependencies {
 	modImplementation("maven.modrinth:ranged-weapon-api:${project.ranged_weapon_api_version}")
 	modImplementation "eu.pb4:placeholder-api:${project.placeholder_api}"
 	implementation 'net.objecthunter:exp4j:0.4.8'
-	modImplementation include("maven.modrinth:armorrenderlib-directors-cut:${project.arl_version}")
 	modApi "maven.modrinth:playerex-directors-cut:${project.playerex_version}"
 	modImplementation "dev.emi:trinkets:${project.trinkets_version}"
 
@@ -92,6 +92,8 @@ dependencies {
 	modImplementation include("io.wispforest.endec:netty:${project.endec_netty_version}")
 
 	annotationProcessor modImplementation("io.wispforest:owo-lib:${project.owo_version}")
+
+	modImplementation ("mod.azure.azurelib:azurelib-fabric-${project.azurelib_version}")
 
 	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixinextras_version}")))
 //	include(implementation("com.moulberry:mixinconstraints:${project.mixin_constraints_version}"))

@@ -1,192 +1,21 @@
 {
-    "playerex:strength": {
-        "relativeWeighting": 75,
-        "additionChance": 60,
-        "additionMin": 1,
-        "additionMax": 10,
-        "additionIncrement": 1,
-        "multiplierMin": 0.05,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:dexterity": {
-        "relativeWeighting": 75,
-        "additionChance": 60,
-        "additionMin": 1,
-        "additionMax": 10,
-        "additionIncrement": 1,
-        "multiplierMin": 0.05,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:intelligence": {
-        "relativeWeighting": 75,
-        "additionChance": 60,
-        "additionMin": 1,
-        "additionMax": 10,
-        "additionIncrement": 1,
-        "multiplierMin": 0.05,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:luckiness": {
-        "relativeWeighting": 75,
-        "additionChance": 60,
-        "additionMin": 1,
-        "additionMax": 10,
-        "additionIncrement": 1,
-        "multiplierMin": 0.05,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:evasion": {
-        "relativeWeighting": 30,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.5,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:lifesteal": {
-        "relativeWeighting": 30,
-        "additionChance": 100,
-        "additionMin": 0.001,
-        "additionMax": 0.05,
-        "additionIncrement": 0.001,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:health_regeneration": {
-        "relativeWeighting": 20,
-        "additionChance": 100,
-        "additionMin": 0.0005,
-        "additionMax": 0.01,
-        "additionIncrement": 0.0005,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:heal_amplification": {
-        "relativeWeighting": 40,
-        "additionChance": 100,
-        "additionMin": 0.001,
-        "additionMax": 0.05,
-        "additionIncrement": 0.001,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:fire_resistance": {
-        "relativeWeighting": 70,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.5,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:freeze_resistance": {
-        "relativeWeighting": 70,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.5,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:lightning_resistance": {
-        "relativeWeighting": 40,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.5,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:poison_resistance": {
-        "relativeWeighting": 70,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.5,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:wither_resistance": {
-        "relativeWeighting": 30,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.5,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "projectile_damage:generic": {
-        "relativeWeighting": 50,
-        "additionChance": 50,
-        "additionMin": 0.25,
-        "additionMax": 4,
-        "additionIncrement": 0.25,
-        "multiplierMin": 0.05,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:melee_crit_chance": {
-        "relativeWeighting": 40,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.5,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:melee_crit_damage": {
-        "relativeWeighting": 30,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.3,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:ranged_crit_chance": {
-        "relativeWeighting": 30,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.5,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:ranged_crit_damage": {
-        "relativeWeighting": 40,
-        "additionChance": 100,
-        "additionMin": 0.01,
-        "additionMax": 0.3,
-        "additionIncrement": 0.01,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    },
-    "playerex:breaking_speed": {
-        "relativeWeighting": 20,
-        "additionChance": 70,
-        "additionMin": 0.2,
-        "additionMax": 4.0,
-        "additionIncrement": 0.2,
-        "multiplierMin": 0.01,
-        "multiplierMax": 0.5,
-        "multiplierIncrement": 0.01
-    }
+    "playerex:strength": "r75:a60:x1:y10:z1:u0.05:v0.5:w0.01",
+    "playerex:dexterity": "r75:a60:x1:y10:z1:u0.05:v0.5:w0.01",
+    "playerex:intelligence": "r75:a60:x1:y10:z1:u0.05:v0.5:w0.01",
+    "playerex:luckiness": "r75:a60:x1:y10:z1:u0.05:v0.5:w0.01",
+    "playerex:evasion": "r30:a100:x0.01:y0.5:z0.01:u0.01:v0.5:w0.01",
+    "playerex:lifesteal": "r30:a100:x0.001:y0.05:z0.001:u0.01:v0.5:w0.01",
+    "playerex:health_regeneration": "r20:a100:x0.0005:y0.01:z0.0005:u0.01:v0.5:w0.01",
+    "playerex:heal_amplification": "r40:a100:x0.001:y0.05:z0.001:u0.01:v0.5:w0.01",
+    "playerex:fire_resistance": "r70:a100:x0.01:y0.5:z0.01:u0.01:v0.5:w0.01",
+    "playerex:freeze_resistance": "r70:a100:x0.01:y0.5:z0.01:u0.01:v0.5:w0.01",
+    "playerex:lightning_resistance": "r40:a100:x0.01:y0.5:z0.01:u0.01:v0.5:w0.01",
+    "playerex:poison_resistance": "r70:a100:x0.01:y0.5:z0.01:u0.01:v0.5:w0.01",
+    "playerex:wither_resistance": "r30:a100:x0.01:y0.5:z0.01:u0.01:v0.5:w0.01",
+    "projectile_damage:generic": "r50:a50:x0.25:y4:z0.25:u0.05:v0.5:w0.01",
+    "playerex:melee_crit_chance": "r40:a100:x0.01:y0.5:z0.01:u0.01:v0.5:w0.01",
+    "playerex:melee_crit_damage": "r30:a100:x0.01:y0.3:z0.01:u0.01:v0.5:w0.01",
+    "playerex:ranged_crit_chance": "r30:a100:x0.01:y0.5:z0.01:u0.01:v0.5:w0.01",
+    "playerex:ranged_crit_damage": "r40:a100:x0.01:y0.3:z0.01:u0.01:v0.5:w0.01",
+    "playerex:breaking_speed": "r20:a70:x0.2:y4.0:z0.2:u0.01:v0.5:w0.01"
 }
