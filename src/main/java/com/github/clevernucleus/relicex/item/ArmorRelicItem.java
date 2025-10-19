@@ -42,26 +42,22 @@ public class ArmorRelicItem extends ArmorItem implements ItemHelper, GeoItem {
 
 	public ArmorRelicItem(RelicType type) {
 		super(ArmorMaterials.CHAIN, type.getType(), (new FabricItemSettings()).maxCount(1));
-		// Registration moved to RelicEx.onInitialize()
 	}
 	
 	/**
 	 * Registers all rareness variants of this armor item to the COMBAT item group
+	 * Items are reconstructed every time the creative menu is opened
 	 */
 	public static void registerAllVariants(Item armorItem, RelicType armorType) {
-		// Only register actual armor pieces (not trinkets)
 		if (armorType.getType() == null) return;
 		
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
 			for (Rareness rareness : Rareness.values()) {
-				// Use the existing registered item instead of creating a new one
 				ItemStack stack = new ItemStack(armorItem);
 				
-				// Set the rareness in NBT
 				NbtCompound tag = stack.getOrCreateNbt();
 				tag.putString(EntityAttributeCollection.KEY_RARENESS, rareness.key());
 				
-				// Initialize the attributes for this rareness
 				EntityAttributeCollection collection = new EntityAttributeCollection();
 				collection.writeToNbt(tag);
 				

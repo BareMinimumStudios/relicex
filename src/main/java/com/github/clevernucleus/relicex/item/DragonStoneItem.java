@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.bibireden.data_attributes.api.DataAttributesAPI;
-import com.bibireden.playerex.PlayerEX;
 import com.bibireden.playerex.api.attribute.PlayerEXAttributes;
 import com.bibireden.playerex.components.PlayerEXComponents;
 import com.mojang.authlib.GameProfile;
