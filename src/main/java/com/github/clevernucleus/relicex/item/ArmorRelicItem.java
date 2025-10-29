@@ -127,18 +127,27 @@ public class ArmorRelicItem extends ArmorItem implements ItemHelper, GeoItem {
 	public void createRenderer(Consumer<Object> consumer) {
 		consumer.accept(new RenderProvider() {
 			private RelicArmorRenderer renderer;
+			private Rareness lastRareness;
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public @NotNull BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
 				var tag = itemStack.getNbt();
-				if (tag != null) {
-					renderer = new RelicArmorRenderer(new RelicArmorModel(Rareness.fromKey(tag.getString(EntityAttributeCollection.KEY_RARENESS))));
+				Rareness currentRareness;
+				
+				if (tag != null && tag.contains(EntityAttributeCollection.KEY_RARENESS, NbtElement.STRING_TYPE)) {
+					currentRareness = Rareness.fromKey(tag.getString(EntityAttributeCollection.KEY_RARENESS));
+				} else {
+					currentRareness = Rareness.COMMON;
 				}
-				else {
-					renderer = new RelicArmorRenderer(new RelicArmorModel(Rareness.COMMON));
+				
+				if (renderer == null || lastRareness != currentRareness) {
+					renderer = new RelicArmorRenderer(new RelicArmorModel(currentRareness));
+					lastRareness = currentRareness;
 				}
+				
 				renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-				return this.renderer;
+				return (BipedEntityModel<LivingEntity>) this.renderer;
 			}
 		});
 	}
