@@ -1,5 +1,6 @@
 package com.github.clevernucleus.relicex.mixin;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
@@ -13,6 +14,7 @@ import com.bibireden.data_attributes.api.DataAttributesAPI;
 import com.bibireden.data_attributes.api.util.RandDistribution;
 import com.github.clevernucleus.relicex.RelicEx;
 import com.github.clevernucleus.relicex.config.RelicExConfig;
+import com.github.clevernucleus.relicex.util.DimensionRelicHelper;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -39,15 +41,27 @@ abstract class LivingEntityMixin extends Entity {
 		Random random = new Random();
 		
 		if(config.dropsOnlyFromPlayerKills && !causedByPlayer) return;
-		double chance = 0.01 * config.mobsDropLootChance;
-		double roll = (source.getAttacker() instanceof LivingEntity) ? DataAttributesAPI.getValue(EntityAttributes.GENERIC_LUCK, (LivingEntity) source.getAttacker())
-			.map(value -> chance * (1.0 + value))
-			.orElse(chance) : chance;
 		
-		if(!(random.nextFloat() < roll)) return;
+		// Get dimension-specific settings
+		String dimensionId = this.getWorld().getRegistryKey().getValue().toString();
+		List<Item> availableRelics = DimensionRelicHelper.getFilteredRelicsForDimension(dimensionId);
+		float chanceMultiplier = DimensionRelicHelper.getRelicChanceMultiplierForDimension(dimensionId);
+		
+		// Apply dimension-specific chance multiplier
+		double baseChance = 0.01 * config.mobsDropLootChance * chanceMultiplier;
+		double chance = (source.getAttacker() instanceof LivingEntity) ? DataAttributesAPI.getValue(EntityAttributes.GENERIC_LUCK, (LivingEntity) source.getAttacker())
+			.map(value -> baseChance * (1.0 + value))
+			.orElse(baseChance) : baseChance;
+		
+		if(!(random.nextFloat() < chance)) return;
 
 		RandDistribution<Item> distributor = new RandDistribution<>(Items.AIR);
-		distributor.add(RelicEx.RELICS.get(random.nextInt(RelicEx.RELICS.size())), 0.01F * (float)config.mobDropIsRelicChance);
+		
+		// Use dimension-filtered relics instead of all relics
+		if (!availableRelics.isEmpty()) {
+			distributor.add(availableRelics.get(random.nextInt(availableRelics.size())), 0.01F * (float)config.mobDropIsRelicChance);
+		}
+		
 		distributor.add(RelicEx.LESSER_ORB_OF_REGRET, 0.01F * (float)config.mobDropIsLesserOrbChance);
 		distributor.add(RelicEx.GREATER_ORB_OF_REGRET, 0.01F * (float)config.mobDropIsGreaterOrbChance);
 		distributor.add(RelicEx.TOME, 0.01F * (float)config.mobDropIsTomeChance);

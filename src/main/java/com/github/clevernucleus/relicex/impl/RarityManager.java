@@ -25,7 +25,7 @@ public final class RarityManager implements SimpleResourceReloadListener<Map<Ide
 
 	private static final Gson GSON = new GsonBuilder().create();
 	private static final int PATH_SUFFIX_LENGTH = ".json".length();
-	private static final Logger LOGGER = LogUtils.getLogger();
+	public static final Logger LOGGER = LogUtils.getLogger();
 	private static final String DIRECTORY = "weights";
 	private static final Identifier ID = new Identifier(RelicEx.MODID, DIRECTORY);
 
