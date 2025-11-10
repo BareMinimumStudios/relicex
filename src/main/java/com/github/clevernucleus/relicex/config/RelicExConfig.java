@@ -86,7 +86,6 @@ public final class RelicExConfig implements ConfigData {
 	@ConfigEntry.Category("dimension_rarity")
 	public DimensionRaritySettings endSettings = new DimensionRaritySettings("minecraft:the_end", 100, 10, 30, 60, 90, 100, 80, 50); // Rare to legendary relics more likely
 	
-	@ConfigEntry.Gui.PrefixText
 	@ConfigEntry.Gui.Tooltip
 	@ConfigEntry.Category("dimension_rarity")
 	public List<DimensionRaritySettings> customDimensionSettings = new ArrayList<>();
