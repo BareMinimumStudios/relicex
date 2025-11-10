@@ -2,7 +2,7 @@ package com.github.clevernucleus.relicex.models.armor;
 
 import com.github.clevernucleus.relicex.impl.Rareness;
 import com.github.clevernucleus.relicex.item.ArmorRelicItem;
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelibarmor.model.GeoModel;
 import net.minecraft.util.Identifier;
 
 public class RelicArmorModel extends GeoModel<ArmorRelicItem> {

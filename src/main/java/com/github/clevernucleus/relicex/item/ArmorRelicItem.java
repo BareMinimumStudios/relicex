@@ -14,11 +14,10 @@ import com.github.clevernucleus.relicex.renderers.RelicArmorRenderer;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.client.RenderProvider;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelibarmor.animatable.GeoItem;
+import mod.azure.azurelibarmor.animatable.client.RenderProvider;
+import mod.azure.azurelibarmor.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelibarmor.util.AzureLibUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.client.item.TooltipContext;
@@ -158,7 +157,7 @@ public class ArmorRelicItem extends ArmorItem implements ItemHelper, GeoItem {
 	}
 
 	@Override
-	public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}
+	public void registerControllers(mod.azure.azurelibarmor.core.animation.AnimatableManager.ControllerRegistrar controllerRegistrar) {}
 
 	@Override
 	public AnimatableInstanceCache getAnimatableInstanceCache() {

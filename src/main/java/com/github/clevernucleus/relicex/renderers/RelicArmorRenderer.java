@@ -1,8 +1,8 @@
 package com.github.clevernucleus.relicex.renderers;
 
 import com.github.clevernucleus.relicex.item.ArmorRelicItem;
-import mod.azure.azurelib.model.GeoModel;
-import mod.azure.azurelib.renderer.GeoArmorRenderer;
+import mod.azure.azurelibarmor.model.GeoModel;
+import mod.azure.azurelibarmor.renderer.GeoArmorRenderer;
 
 public class RelicArmorRenderer extends GeoArmorRenderer<ArmorRelicItem> {
     public RelicArmorRenderer(GeoModel<ArmorRelicItem> model) {

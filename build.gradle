@@ -94,6 +94,7 @@ dependencies {
 	annotationProcessor modImplementation("io.wispforest:owo-lib:${project.owo_version}")
 
 	modImplementation ("mod.azure.azurelib:azurelib-fabric-${project.azurelib_version}")
+	modImplementation "mod.azure.azurelibarmor:azurelibarmor-fabric-${project.azurelib_version}"
 
 	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixinextras_version}")))
 //	include(implementation("com.moulberry:mixinconstraints:${project.mixin_constraints_version}"))

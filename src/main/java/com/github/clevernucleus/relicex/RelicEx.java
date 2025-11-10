@@ -13,7 +13,6 @@ import com.github.clevernucleus.relicex.item.OrbOfRegretItem;
 import com.github.clevernucleus.relicex.item.RelicItem;
 import com.github.clevernucleus.relicex.item.RelicShardItem;
 import com.github.clevernucleus.relicex.item.TomeItem;
-import com.github.clevernucleus.relicex.util.DimensionRelicHelper;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
@@ -77,16 +76,8 @@ public class RelicEx implements ModInitializer {
 		}
 		
 		if(!config().chestsHaveLoot || !id.toString().contains(":chests/")) return;
-		
-		// Get dimension-specific relics and chance multiplier
-		String dimensionId = DimensionRelicHelper.getDimensionIdFromLootTableId(id);
-		List<Item> availableRelics = DimensionRelicHelper.getFilteredRelicsForDimension(dimensionId);
-		float chanceMultiplier = DimensionRelicHelper.getRelicChanceMultiplierForDimension(dimensionId);
-		
-		// Apply dimension-specific relic chance
-		float adjustedRelicChance = config().chestsHaveRelicChance * chanceMultiplier;
-		LootPool.Builder relics = LootPool.builder().rolls(ConstantLootNumberProvider.create(1)).conditionally(RandomChanceLootCondition.builder(0.01F * adjustedRelicChance));
-		availableRelics.forEach(item -> relics.with(ItemEntry.builder(item)));
+		LootPool.Builder relics = LootPool.builder().rolls(ConstantLootNumberProvider.create(1)).conditionally(RandomChanceLootCondition.builder(0.01F * (float)config().chestsHaveRelicChance));
+		RELICS.forEach(item -> relics.with(ItemEntry.builder(item)));
 		
 		LootPool.Builder lesserOrb = LootPool.builder().rolls(ConstantLootNumberProvider.create(1)).conditionally(RandomChanceLootCondition.builder(0.01F * (float)config().chestsHaveLesserOrbChance));
 		lesserOrb.with(ItemEntry.builder(LESSER_ORB_OF_REGRET));

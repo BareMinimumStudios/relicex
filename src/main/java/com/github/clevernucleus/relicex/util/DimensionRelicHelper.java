@@ -2,10 +2,10 @@ package com.github.clevernucleus.relicex.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.github.clevernucleus.relicex.RelicEx;
 import com.github.clevernucleus.relicex.config.RelicExConfig;
-import com.github.clevernucleus.relicex.impl.RarityManager;
 import com.github.clevernucleus.relicex.impl.WeightProperty;
 
 import net.minecraft.item.Item;
@@ -27,8 +27,7 @@ public class DimensionRelicHelper {
         }
         
         List<Item> filteredRelics = new ArrayList<>();
-        float minRarity = settings.minRarityPercentage / 100.0f;
-        float maxRarity = settings.maxRarityPercentage / 100.0f;
+        Random random = new Random();
         
         for (Item relic : RelicEx.RELICS) {
             Identifier relicId = Registries.ITEM.getId(relic);
@@ -36,18 +35,41 @@ public class DimensionRelicHelper {
             
             if (weight != null) {
                 float relicRarity = weight.rarity();
-                if (relicRarity >= minRarity && relicRarity <= maxRarity) {
+                int chanceForRarity = getChanceForRarity(relicRarity, settings);
+                
+                // Roll against the percentage chance for this rarity
+                if (random.nextInt(100) < chanceForRarity) {
                     filteredRelics.add(relic);
                 }
             } else {
                 // If no weight is defined, treat as common (0% rarity)
-                if (minRarity <= 0.0f) {
+                if (random.nextInt(100) < settings.commonRelicChance) {
                     filteredRelics.add(relic);
                 }
             }
         }
         
         return filteredRelics.isEmpty() ? RelicEx.RELICS : filteredRelics;
+    }
+    
+    private static int getChanceForRarity(float relicRarity, RelicExConfig.DimensionRaritySettings settings) {
+        // Map rarity values to the appropriate chance setting
+        // These ranges match the typical rarity system in your mod
+        if (relicRarity <= 0.05f) { // 0-5% = Common
+            return settings.commonRelicChance;
+        } else if (relicRarity <= 0.15f) { // 6-15% = Uncommon
+            return settings.uncommonRelicChance;
+        } else if (relicRarity <= 0.30f) { // 16-30% = Rare
+            return settings.rareRelicChance;
+        } else if (relicRarity <= 0.50f) { // 31-50% = Epic
+            return settings.epicRelicChance;
+        } else if (relicRarity <= 0.70f) { // 51-70% = Mythical
+            return settings.mythicalRelicChance;
+        } else if (relicRarity <= 0.90f) { // 71-90% = Legendary
+            return settings.legendaryRelicChance;
+        } else { // 91-100% = Immortal
+            return settings.immortalRelicChance;
+        }
     }
     
     public static float getRelicChanceMultiplierForDimension(String dimensionId) {
@@ -62,7 +84,7 @@ public class DimensionRelicHelper {
             return 1.0f;
         }
         
-        return settings.relicChanceMultiplier / 100.0f;
+        return settings.relicChanceMultiplier;
     }
     
     private static RelicExConfig.DimensionRaritySettings getDimensionSettings(String dimensionId, RelicExConfig config) {
@@ -75,7 +97,7 @@ public class DimensionRelicHelper {
             return config.endSettings;
         }
         
-        // then custom
+        // Check custom dimension settings
         for (RelicExConfig.DimensionRaritySettings customSettings : config.customDimensionSettings) {
             if (dimensionId.equals(customSettings.dimensionId)) {
                 return customSettings;
@@ -87,19 +109,17 @@ public class DimensionRelicHelper {
     
     public static String getDimensionIdFromLootTableId(Identifier lootTableId) {
         String path = lootTableId.toString();
-
-        RarityManager.LOGGER.info("got: " + path);
         
-        if (path.contains("minecraft:")) {
-            if (path.contains("nether") || path.contains("bastion") || path.contains("fortress")) {
-                return "minecraft:the_nether";
-            } else if (path.contains("end_city_treasure")) {
-                return "minecraft:the_end";
-            } else {
-                return "minecraft:overworld";
-            }
+        // Extract dimension from loot table path
+        // Most chest loot tables follow the pattern: namespace:chests/structure_name
+        // We'll need to infer dimension from the structure or use a mapping
+        
+        if (path.contains("nether") || path.contains("bastion") || path.contains("fortress")) {
+            return "minecraft:the_nether";
+        } else if (path.contains("end") || path.contains("city")) {
+            return "minecraft:the_end";
         } else {
-            return null;
+            return "minecraft:overworld";
         }
     }
 }

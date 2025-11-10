@@ -42,12 +42,10 @@ abstract class LivingEntityMixin extends Entity {
 		
 		if(config.dropsOnlyFromPlayerKills && !causedByPlayer) return;
 		
-		// Get dimension-specific settings
 		String dimensionId = this.getWorld().getRegistryKey().getValue().toString();
 		List<Item> availableRelics = DimensionRelicHelper.getFilteredRelicsForDimension(dimensionId);
 		float chanceMultiplier = DimensionRelicHelper.getRelicChanceMultiplierForDimension(dimensionId);
 		
-		// Apply dimension-specific chance multiplier
 		double baseChance = 0.01 * config.mobsDropLootChance * chanceMultiplier;
 		double chance = (source.getAttacker() instanceof LivingEntity) ? DataAttributesAPI.getValue(EntityAttributes.GENERIC_LUCK, (LivingEntity) source.getAttacker())
 			.map(value -> baseChance * (1.0 + value))
