@@ -84,7 +84,7 @@ public class DimensionRelicHelper {
             return 1.0f;
         }
         
-        return settings.relicChanceMultiplier;
+        return settings.relicChanceMultiplier / 100.0f;
     }
     
     private static RelicExConfig.DimensionRaritySettings getDimensionSettings(String dimensionId, RelicExConfig config) {
@@ -105,21 +105,5 @@ public class DimensionRelicHelper {
         }
         
         return null;
-    }
-    
-    public static String getDimensionIdFromLootTableId(Identifier lootTableId) {
-        String path = lootTableId.toString();
-        
-        // Extract dimension from loot table path
-        // Most chest loot tables follow the pattern: namespace:chests/structure_name
-        // We'll need to infer dimension from the structure or use a mapping
-        
-        if (path.contains("nether") || path.contains("bastion") || path.contains("fortress")) {
-            return "minecraft:the_nether";
-        } else if (path.contains("end") || path.contains("city")) {
-            return "minecraft:the_end";
-        } else {
-            return "minecraft:overworld";
-        }
     }
 }

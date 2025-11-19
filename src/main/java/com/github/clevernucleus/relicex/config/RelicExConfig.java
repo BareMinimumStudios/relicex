@@ -94,9 +94,9 @@ public final class RelicExConfig implements ConfigData {
 		@ConfigEntry.Gui.Tooltip
 		public String dimensionId;
 		
-		@ConfigEntry.BoundedDiscrete(min = 0, max = 2)
+		@ConfigEntry.BoundedDiscrete(min = 0, max = 200)
 		@ConfigEntry.Gui.Tooltip
-		public int relicChanceMultiplier = 1;
+		public int relicChanceMultiplier;
 		
 		// Individual rarity percentages (0-100%)
 		@ConfigEntry.BoundedDiscrete(min = 0, max = 100)
