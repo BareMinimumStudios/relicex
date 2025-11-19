@@ -11,9 +11,7 @@ import java.util.function.Function;
 
 import org.slf4j.Logger;
 
-import com.github.clevernucleus.armorrenderlib.api.ArmorRenderLib;
-import com.github.clevernucleus.armorrenderlib.api.ArmorRenderProvider;
-import com.bibireden.data_attributes.api.event.AttributesReloadedEvent;
+
 import com.github.clevernucleus.relicex.impl.EntityAttributeCollection;
 import com.github.clevernucleus.relicex.impl.Rareness;
 import com.google.gson.Gson;
@@ -51,14 +49,6 @@ public class RelicExClient implements ClientModInitializer {
 		return rareness.predicate();
 	}
 	
-	private static ArmorRenderProvider render(final ItemStack itemStack, final LivingEntity livingEntity, final EquipmentSlot slot) {
-		NbtCompound tag = itemStack.getNbt();
-		Function<Rareness, String> texture = rareness -> RelicEx.MODID + ":textures/models/armor/" + rareness.toString() + ".png";
-		
-		if(tag == null || !tag.contains(EntityAttributeCollection.KEY_RARENESS, NbtElement.STRING_TYPE)) return s -> s.accept(texture.apply(Rareness.COMMON), 0xFFFFFF, false);
-		return s -> s.accept(texture.apply(Rareness.fromKey(tag.getString(EntityAttributeCollection.KEY_RARENESS))), 0xFFFFFF, false);
-	}
-	
 	public static Formatting getColor(final Rareness rareness, final Formatting fallback) {
 		return RelicExClient.RARENESS_COLOR.data.getOrDefault(rareness, fallback);
 	}
@@ -66,7 +56,6 @@ public class RelicExClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		RelicEx.RELICS.forEach(item -> ModelPredicateProviderRegistry.register(item, RARENESS, RelicExClient::predicate));
-		ArmorRenderLib.register(RelicExClient::render, RelicEx.HEAD_RELIC, RelicEx.CHEST_RELIC);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(RARENESS_COLOR);
 	}
 	
@@ -81,14 +70,14 @@ public class RelicExClient implements ClientModInitializer {
 		private static final String DIRECTORY = "rareness";
 		private static final Identifier ID = new Identifier(RelicEx.MODID, DIRECTORY);
 		
-		protected Map<Rareness, Formatting> data = new HashMap<Rareness, Formatting>();
+		protected Map<Rareness, Formatting> data = new HashMap<>();
 		
 		protected RarenessColor() {}
 		
 		@Override
 		public CompletableFuture<Map<Rareness, Formatting>> load(ResourceManager manager, Profiler profiler, Executor executor) {
 			return CompletableFuture.supplyAsync(() -> {
-				Map<Identifier, RarenessFormatting> cache = new HashMap<Identifier, RarenessFormatting>();
+				Map<Identifier, RarenessFormatting> cache = new HashMap<>();
 				int length = DIRECTORY.length() + 1;
 				
 				for(Map.Entry<Identifier, Resource> entry : manager.findResources(DIRECTORY, id -> id.getPath().endsWith("colors.json")).entrySet()) {
@@ -109,10 +98,12 @@ public class RelicExClient implements ClientModInitializer {
 								throw new IllegalStateException("Duplicate asset file ignored with ID " + identifier);
 							}
 							
-							LOGGER.error("Couldn't load asset file {} from {} as it's null or empty", (Object)identifier, (Object)resource);
+							LOGGER.error("Couldn't load asset file {} from {} as it's null or empty", identifier, resource);
 						} finally {
-							if(reader == null) continue;
-							((Reader)reader).close();
+							if (reader != null)
+							{
+								((Reader)reader).close();
+							}
 						}
 					} catch(IOException | IllegalArgumentException exception) {
 						LOGGER.error("Couldn't parse asset file {} from {}", identifier, resource, exception);

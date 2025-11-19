@@ -50,6 +50,24 @@ public final class WeightProperty {
 		this.values.put(EntityAttributeModifier.Operation.MULTIPLY_TOTAL, multiplyTotal);
 	}
 	
+	public WeightProperty(final RarityManager.Weights weights) {
+		Float[] addition = new Float[4];
+		Float[] multiplyTotal = new Float[4];
+		
+		this.rarity = weights.relativeWeighting() * 0.01F;
+		addition[0] = weights.additionChance() * 0.01F;
+		multiplyTotal[0] = 1.0F - addition[0];
+		addition[1] = weights.additionMin();
+		addition[2] = weights.additionMax();
+		addition[3] = weights.additionIncrement();
+		multiplyTotal[1] = weights.multiplierMin();
+		multiplyTotal[2] = weights.multiplierMax();
+		multiplyTotal[3] = weights.multiplierIncrement();
+		
+		this.values.put(EntityAttributeModifier.Operation.ADDITION, addition);
+		this.values.put(EntityAttributeModifier.Operation.MULTIPLY_TOTAL, multiplyTotal);
+	}
+	
 	private static float parse(final String stringIn, final char prefixIn) {
 		if(!CHARS.contains(prefixIn)) return 0.0F;
 		final String string = stringIn.replace(String.valueOf(prefixIn), "");

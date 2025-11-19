@@ -20,21 +20,21 @@ import net.minecraft.util.profiler.Profiler;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-public final class RarityManager implements SimpleResourceReloadListener<RarityManager.Weights> {
-	public record Weights(Map<Identifier, String> packedWeights) {}
+public final class RarityManager implements SimpleResourceReloadListener<Map<Identifier, RarityManager.Weights>> {
+	public static record Weights(float relativeWeighting, float additionChance, float additionMin, float additionMax, float additionIncrement, float multiplierMin, float multiplierMax, float multiplierIncrement) {}
 
-	private static final Gson GSON = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+	private static final Gson GSON = new GsonBuilder().create();
 	private static final int PATH_SUFFIX_LENGTH = ".json".length();
-	private static final Logger LOGGER = LogUtils.getLogger();
+	public static final Logger LOGGER = LogUtils.getLogger();
 	private static final String DIRECTORY = "weights";
 	private static final Identifier ID = new Identifier(RelicEx.MODID, DIRECTORY);
 
 	private final Map<Identifier, WeightProperty> cachedWeightMap;
 
 	@Override
-	public CompletableFuture<Weights> load(ResourceManager manager, Profiler profiler, Executor executor) {
+	public CompletableFuture<Map<Identifier, Weights>> load(ResourceManager manager, Profiler profiler, Executor executor) {
 		return CompletableFuture.supplyAsync(() -> {
-			Map<Identifier, String> cache = new HashMap<>();
+			Map<Identifier, Weights> cache = new HashMap<>();
 			int length = DIRECTORY.length() + 1;
 
 			manager.findResources(DIRECTORY, id -> id.getPath().endsWith(".json")).forEach((resource, value) -> {
@@ -43,35 +43,34 @@ public final class RarityManager implements SimpleResourceReloadListener<RarityM
 
 				try {
 					BufferedReader reader = value.getReader();
-					GSON.<Map<String, String>>fromJson(reader, new TypeToken<Map<String, String>>() {}.getType())
-						.forEach((k, v) -> {
+					Map<String, Weights> weightsMap = GSON.fromJson(reader, new TypeToken<Map<String, Weights>>() {}.getType());
+					
+					if (weightsMap != null) {
+						weightsMap.forEach((k, v) -> {
 							Identifier id = Identifier.tryParse(k);
 							if (id == null || v == null) {
-								LOGGER.warn("Failed to parse weight from asset file {} from {} :: [{}:{}]?", identifier, resource, id, v);
+								LOGGER.warn("Failed to parse weight from asset file {} from {} :: [{}:{}]", identifier, resource, id, v);
 								return;
-							};
+							}
 							cache.putIfAbsent(id, v);
 						});
+					}
 				} catch(IOException | IllegalArgumentException exception) {
 					LOGGER.error("Couldn't parse asset file {} from {}", identifier, resource, exception);
 				}
 			});
 
-			return new Weights(cache);
+			return cache;
 		}, executor);
 	}
 
 	@Override
-	public CompletableFuture<Void> apply(Weights data, ResourceManager manager, Profiler profiler, Executor executor) {
+	public CompletableFuture<Void> apply(Map<Identifier, Weights> data, ResourceManager manager, Profiler profiler, Executor executor) {
 		return CompletableFuture.runAsync(() -> {
-			data.packedWeights.forEach((id, packedWeight) -> {
-				if (packedWeight.isEmpty()) return;
-
-				String[] strings = packedWeight.split(":");
-
-				if(strings.length != 8) return;
-				WeightProperty property = new WeightProperty(strings);
-				this.cachedWeightMap.putIfAbsent(id, property);
+			this.cachedWeightMap.clear();
+			data.forEach((id, weights) -> {
+				WeightProperty property = new WeightProperty(weights);
+				this.cachedWeightMap.put(id, property);
 			});
 		}, executor);
 	}

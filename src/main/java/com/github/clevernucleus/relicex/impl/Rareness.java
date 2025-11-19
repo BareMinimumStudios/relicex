@@ -59,6 +59,10 @@ public enum Rareness {
 		if(weight < IMMORTAL.weight()) return IMMORTAL;
 		return COMMON;
 	}
+
+	public String key() {
+		return this.key;
+	}
 	
 	public float weight() {
 		return this.weight;
